@@ -1,6 +1,7 @@
 package br.com.blogproject.api.infra.security;
 
 import java.io.IOException;
+import java.nio.file.AccessDeniedException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -9,7 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import br.com.blogproject.api.repository.BlogRepository;
+import br.com.blogproject.api.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,7 +23,7 @@ public class SecurityFilter extends OncePerRequestFilter{
     TokenService tokenService;
 
     @Autowired
-    BlogRepository repository;
+    UserRepository repository;
     
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -36,13 +37,13 @@ public class SecurityFilter extends OncePerRequestFilter{
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
-        filterChain.doFilter(request, response);
+        filterChain.doFilter(request, response);    
     }
 
     private String recoverToken(HttpServletRequest request){
         var authHeader = request.getHeader("Authorization");
 
-        if(authHeader == null){
+        if(authHeader == null || authHeader.endsWith("null")){
             return null;
         }
 

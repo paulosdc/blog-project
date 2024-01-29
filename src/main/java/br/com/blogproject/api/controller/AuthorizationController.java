@@ -7,13 +7,14 @@ import br.com.blogproject.api.domain.user.LoginResponseDTO;
 import br.com.blogproject.api.domain.user.RegisterDTO;
 import br.com.blogproject.api.domain.user.User;
 import br.com.blogproject.api.infra.security.TokenService;
-import br.com.blogproject.api.repository.BlogRepository;
+import br.com.blogproject.api.repository.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,12 +22,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @RestController
 @RequestMapping("auth")
+@CrossOrigin(origins = "*")
 public class AuthorizationController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    private BlogRepository repository;
+    private UserRepository repository;
 
     @Autowired
     private TokenService tokenService;

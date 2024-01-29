@@ -7,6 +7,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import br.com.blogproject.api.domain.post.Post;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -48,7 +52,8 @@ public class User implements UserDetails{
     @Column(name = "email", nullable = false, unique = true, length = 255)
     private String email;
 
-    @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     private List<Post> posts;
 
     public User(String name, String email, String username, String password){
@@ -56,6 +61,10 @@ public class User implements UserDetails{
         this.email = email;
         this.username = username;
         this.password = password;
+    }
+
+    public User(Long id){
+        this.id = id;
     }
 
     @Override
